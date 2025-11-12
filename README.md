@@ -256,14 +256,17 @@ Contributions are welcome! Areas for improvement:
 ## 📄 License
 
 This software is licensed GPL 3.0 
-(c) Marc Alier
+(c) Marc Alier, Juanan Pereira 
+LAMB project https://lamb-project.org 
+Universitat Politècnica de Catalunya (www.upc.edu)
+Universidad del Pais Vasco / Euskal Herriko Universitea (www.ehu.eus)
 
 
 ## 🙏 Acknowledgments
 
 - Built with [Ollama](https://ollama.ai/) for local LLM inference
-- Uses vision models like [Qwen2-VL](https://github.com/QwenLM/Qwen2-VL) and [LLaVA](https://llava-vl.github.io/)
-- Inspired by the need for better technical documentation accessibility
+- Uses vision models like Qwen3-VL
+- Grial Research Group - Universidad de Salamanca 
 
 ## 📧 Support
 
