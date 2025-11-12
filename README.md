@@ -80,7 +80,7 @@ pip install requests pillow rich
 
 ### Basic Usage
 ```bash
-python annotate_images_enhanced.py \
+uv run annotate_images_enhanced.py \
     --input docs/architecture.md \
     --output docs/architecture_annotated.md \
     --summary docs/diagram_summary.md \
@@ -90,7 +90,7 @@ python annotate_images_enhanced.py \
 
 ### Advanced Options
 ```bash
-python annotate_images_enhanced.py \
+uv run annotate_images_enhanced.py \
     --input docs/architecture.md \
     --output docs/architecture_annotated.md \
     --summary docs/diagram_summary.md \

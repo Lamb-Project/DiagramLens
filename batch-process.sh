@@ -13,7 +13,7 @@ NC='\033[0m' # No Color
 BOLD='\033[1m'
 
 # Default values
-DEFAULT_MODEL="qwen2-vl:7b"
+DEFAULT_MODEL="qwen3-vl:30b"
 DEFAULT_CONTEXT_SIZE=500
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PYTHON_SCRIPT="${SCRIPT_DIR}/annotate_images_enhanced.py"
@@ -30,8 +30,6 @@ ${BOLD}Options:${NC}
     -m, --model MODEL      Ollama vision model to use (default: ${DEFAULT_MODEL})
     -c, --context SIZE     Context size for analysis (default: ${DEFAULT_CONTEXT_SIZE})
     -v, --verbose          Enable verbose output for each file
-    -r, --recursive        Process markdown files recursively
-    -p, --parallel NUM     Process NUM files in parallel (default: 1)
     -s, --skip-existing    Skip files that already have outputs
     -d, --dry-run          Show what would be processed without executing
     -h, --help             Display this help message
@@ -41,10 +39,7 @@ ${BOLD}Examples:${NC}
     $0 -i docs/input -o docs/output
 
     # With custom model and verbose output
-    $0 -i docs/input -o docs/output -m qwen2-vl:72b -v
-
-    # Recursive processing with parallel execution
-    $0 -i docs -o docs_annotated -r -p 4
+    $0 -i docs/input -o docs/output -m qwen3-vl:72b -v
 
     # Skip existing and use larger context
     $0 -i docs -o output -s -c 1000
@@ -64,9 +59,9 @@ print_message() {
 check_dependencies() {
     local missing_deps=()
     
-    # Check for Python
-    if ! command -v python3 &> /dev/null && ! command -v python &> /dev/null; then
-        missing_deps+=("Python 3")
+    # Check for uv
+    if ! command -v uv &> /dev/null; then
+        missing_deps+=("uv (install from https://github.com/astral-sh/uv)")
     fi
     
     # Check for Ollama
@@ -90,14 +85,6 @@ check_dependencies() {
     if [ ! -f "$CATEGORIES_FILE" ]; then
         missing_deps+=("image_categories_enhanced.json")
     fi
-    
-    # Check for required Python packages
-    python_cmd=$(command -v python3 || command -v python)
-    for package in requests pillow rich; do
-        if ! $python_cmd -c "import $package" 2>/dev/null; then
-            missing_deps+=("Python package: $package")
-        fi
-    done
     
     if [ ${#missing_deps[@]} -gt 0 ]; then
         print_message "$RED" "❌ Missing dependencies:"
@@ -138,8 +125,8 @@ process_file() {
     
     print_message "$BLUE" "  📄 Processing: $relative_path"
     
-    # Build the command
-    local cmd="$PYTHON_CMD $PYTHON_SCRIPT"
+    # Build the command using uv run
+    local cmd="uv run $PYTHON_SCRIPT"
     cmd="$cmd --input \"$input_file\""
     cmd="$cmd --output \"$output_file\""
     cmd="$cmd --summary \"$summary_file\""
@@ -164,13 +151,9 @@ process_file() {
 # Function to find all markdown files
 find_markdown_files() {
     local input_dir=$1
-    local recursive=$2
     
-    if [ "$recursive" = true ]; then
-        find "$input_dir" -type f -name "*.md" 2>/dev/null
-    else
-        find "$input_dir" -maxdepth 1 -type f -name "*.md" 2>/dev/null
-    fi
+    # Only search in the top level directory
+    find "$input_dir" -maxdepth 1 -type f -name "*.md" 2>/dev/null
 }
 
 # Parse command line arguments
@@ -179,8 +162,6 @@ OUTPUT_DIR=""
 MODEL="$DEFAULT_MODEL"
 CONTEXT_SIZE="$DEFAULT_CONTEXT_SIZE"
 VERBOSE=false
-RECURSIVE=false
-PARALLEL=1
 SKIP_EXISTING=false
 DRY_RUN=false
 
@@ -205,14 +186,6 @@ while [[ $# -gt 0 ]]; do
         -v|--verbose)
             VERBOSE=true
             shift
-            ;;
-        -r|--recursive)
-            RECURSIVE=true
-            shift
-            ;;
-        -p|--parallel)
-            PARALLEL="$2"
-            shift 2
             ;;
         -s|--skip-existing)
             SKIP_EXISTING=true
@@ -244,9 +217,6 @@ if [ ! -d "$INPUT_DIR" ]; then
     exit 1
 fi
 
-# Set Python command
-PYTHON_CMD=$(command -v python3 || command -v python)
-
 # Print header
 echo
 print_message "$BOLD$CYAN" "═══════════════════════════════════════════════════════"
@@ -260,8 +230,6 @@ echo "  Input Directory:  $INPUT_DIR"
 echo "  Output Directory: $OUTPUT_DIR"
 echo "  Model:           $MODEL"
 echo "  Context Size:    $CONTEXT_SIZE"
-echo "  Recursive:       $RECURSIVE"
-echo "  Parallel:        $PARALLEL"
 echo "  Skip Existing:   $SKIP_EXISTING"
 echo "  Verbose:         $VERBOSE"
 echo "  Dry Run:         $DRY_RUN"
@@ -282,7 +250,7 @@ fi
 
 # Find all markdown files
 print_message "$BOLD" "Scanning for markdown files..."
-mapfile -t md_files < <(find_markdown_files "$INPUT_DIR" "$RECURSIVE")
+mapfile -t md_files < <(find_markdown_files "$INPUT_DIR")
 
 if [ ${#md_files[@]} -eq 0 ]; then
     print_message "$YELLOW" "⚠ No markdown files found in $INPUT_DIR"
@@ -300,32 +268,16 @@ successful=0
 failed=0
 skipped=0
 
-# Process files (parallel support if requested)
-if [ "$PARALLEL" -gt 1 ] && command -v parallel &> /dev/null; then
-    # Use GNU parallel if available
-    print_message "$CYAN" "Using parallel processing with $PARALLEL workers..."
+# Sequential processing
+for file in "${md_files[@]}"; do
+    relative_path="${file#$INPUT_DIR/}"
     
-    export -f process_file print_message
-    export PYTHON_CMD PYTHON_SCRIPT CATEGORIES_FILE MODEL CONTEXT_SIZE VERBOSE SKIP_EXISTING DRY_RUN
-    export OUTPUT_DIR INPUT_DIR
-    export RED GREEN YELLOW BLUE CYAN NC BOLD
-    
-    for file in "${md_files[@]}"; do
-        relative_path="${file#$INPUT_DIR/}"
-        echo "$file|$OUTPUT_DIR|$relative_path"
-    done | parallel -j "$PARALLEL" --colsep '|' process_file {1} {2} {3}
-else
-    # Sequential processing
-    for file in "${md_files[@]}"; do
-        relative_path="${file#$INPUT_DIR/}"
-        
-        if process_file "$file" "$OUTPUT_DIR" "$relative_path"; then
-            ((successful++))
-        else
-            ((failed++))
-        fi
-    done
-fi
+    if process_file "$file" "$OUTPUT_DIR" "$relative_path"; then
+        ((successful++))
+    else
+        ((failed++))
+    fi
+done
 
 # Calculate final statistics
 for file in "${md_files[@]}"; do
