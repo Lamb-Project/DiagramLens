@@ -86,6 +86,4 @@ The generated annotated Markdown can serve multiple downstream applications:
 
 This pipeline demonstrates that local multimodal AI workflows can effectively process and analyze complex technical reports while preserving confidentiality. By combining **DeepSeekOCR-MLX** for text extraction with **DiagramLens** for visual understanding, the system bridges the gap between document OCR and semantic analysis. The resulting annotated Markdown becomes a high-value dataset for automated assessment and technical documentation research.
 
----
 
-Would you like me to include a **“Related Work”** and **“Future Work”** section next (to complete it as a publishable paper), or keep it at this stage-level summary version?
