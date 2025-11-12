@@ -1,0 +1,61 @@
+{
+  "categories": [
+    "entity relationship diagram",
+    "class diagram",
+    "sequence diagram",
+    "data flow diagram",
+    "schema",
+    "architecture diagram",
+    "use-case diagram",
+    "state diagram",
+    "deployment diagram",
+    "C4 Model diagram",
+    "other"
+  ],
+  "category_prompts": {
+    "entity relationship diagram": {
+      "prompt": "Describe this Entity Relationship Diagram by listing:\n1. All entities present (list each entity name)\n2. The attributes for each entity that are visible\n3. Primary keys (marked with PK or underlined)\n4. Foreign keys if marked\n5. All relationships between entities with their cardinality (1:1, 1:N, M:N)\n6. Any relationship attributes if present\n7. Whether the notation appears to be Chen, Crow's Foot, or another standard\n8. Any constraints or business rules shown\nBe factual and comprehensive. List exactly what you see.",
+      "focus_areas": ["entities", "attributes", "keys", "relationships", "cardinality", "notation"]
+    },
+    "class diagram": {
+      "prompt": "Describe this UML Class Diagram by listing:\n1. All classes present (list each class name)\n2. For each class: attributes with their types and visibility (+/-/#)\n3. For each class: methods/operations with parameters and return types if shown\n4. Inheritance relationships (which class extends which)\n5. Associations with their multiplicities\n6. Aggregation and composition relationships if present\n7. Interfaces or abstract classes (if marked with <<interface>> or italics)\n8. Any stereotypes or constraints shown\nBe precise about UML notation used.",
+      "focus_areas": ["classes", "attributes", "methods", "inheritance", "associations", "multiplicities"]
+    },
+    "sequence diagram": {
+      "prompt": "Describe this Sequence Diagram by listing:\n1. All actors/objects across the top (list each participant)\n2. The lifelines for each participant\n3. Each message in order (who sends to whom, message name)\n4. Message types (synchronous/asynchronous, return messages)\n5. Activation boxes showing when objects are active\n6. Any loops (loop frames with conditions)\n7. Any conditionals (alt/opt frames)\n8. Object creation/destruction if shown\n9. Any notes or constraints\nList messages in chronological order.",
+      "focus_areas": ["participants", "messages", "message_types", "control_flow", "activations"]
+    },
+    "data flow diagram": {
+      "prompt": "Describe this Data Flow Diagram by listing:\n1. All external entities (squares/rectangles on edges)\n2. All processes (circles/rounded rectangles with numbers like 1.0, 2.0)\n3. All data stores (parallel lines with names)\n4. All data flows (arrows) with their labels\n5. The DFD level (Context/Level 0/Level 1)\n6. Process numbering scheme used\n7. Whether it follows Gane-Sarson or Yourdon-DeMarco notation\n8. Any missing flow labels or unnamed elements\nBe specific about what connects to what.",
+      "focus_areas": ["external_entities", "processes", "data_stores", "data_flows", "levels"]
+    },
+    "schema": {
+      "prompt": "Describe this Database Schema by listing:\n1. All tables/entities shown\n2. For each table: all columns with their data types (VARCHAR, INT, etc.)\n3. Primary keys (usually marked with PK or key symbol)\n4. Foreign keys and what they reference\n5. Any indexes shown\n6. Constraints (NOT NULL, UNIQUE, CHECK) if visible\n7. Relationships between tables (lines showing foreign key references)\n8. Whether it appears to be relational, document-based, or another type\nBe specific about data types and constraints.",
+      "focus_areas": ["tables", "columns", "data_types", "keys", "constraints", "relationships"]
+    },
+    "architecture diagram": {
+      "prompt": "Describe this Architecture Diagram by listing:\n1. All components/services shown (with their names)\n2. The layers or tiers if apparent (presentation, business, data)\n3. External systems or third-party services\n4. Databases or data stores\n5. Communication protocols if labeled (HTTP, REST, gRPC, etc.)\n6. Direction of data flow (arrows)\n7. Any load balancers, queues, or middleware\n8. Deployment boundaries (cloud, on-premise, containers)\n9. Security elements (firewalls, auth services) if shown\nDescribe the overall structure objectively.",
+      "focus_areas": ["components", "layers", "communications", "external_systems", "infrastructure"]
+    },
+    "use-case diagram": {
+      "prompt": "Describe this Use Case Diagram by listing:\n1. All actors (stick figures or labeled boxes)\n2. The system boundary (rectangle containing use cases)\n3. All use cases (ovals with names)\n4. Which actors connect to which use cases\n5. Any <<include>> relationships between use cases\n6. Any <<extend>> relationships between use cases\n7. Any generalization relationships between actors\n8. Whether use case names follow verb-noun format\nList all elements and their connections precisely.",
+      "focus_areas": ["actors", "use_cases", "system_boundary", "relationships", "includes", "extends"]
+    },
+    "state diagram": {
+      "prompt": "Describe this State Diagram by listing:\n1. All states (rounded rectangles with names)\n2. The initial state (filled circle) and what it transitions to\n3. Final states (circle with dot inside) if any\n4. All transitions with their labels (event[guard]/action format)\n5. Events that trigger transitions\n6. Guard conditions in square brackets\n7. Actions shown after forward slash\n8. Any composite or hierarchical states\n9. Entry/exit actions within states\nList states and transitions systematically.",
+      "focus_areas": ["states", "transitions", "events", "guards", "actions", "initial_final"]
+    },
+    "deployment diagram": {
+      "prompt": "Describe this Deployment Diagram by listing:\n1. All nodes (3D boxes representing hardware/environments)\n2. Node types (server, device, execution environment)\n3. Artifacts deployed on each node (components, files, executables)\n4. Communication paths between nodes (lines with protocols)\n5. Multiplicities on nodes if shown\n6. Any deployment specifications\n7. Technologies or platforms labeled (OS, middleware)\n8. Network topology if apparent\nSpecify what is deployed where.",
+      "focus_areas": ["nodes", "artifacts", "communications", "deployment_specs", "technologies"]
+    },
+    "C4 Model diagram": {
+      "prompt": "Describe this C4 Model diagram by identifying:\n1. The C4 level (Context/Container/Component/Code)\n2. For Context: all systems, users/actors, and external systems\n3. For Container: all containers with their technology labels\n4. For Component: all components within their container\n5. All relationships with their labels and protocols\n6. Technologies in brackets (e.g., [Java], [PostgreSQL])\n7. The system boundary if shown\n8. Any numbered interactions showing flow\nSpecify exactly what level and what elements are present.",
+      "focus_areas": ["c4_level", "elements", "technologies", "relationships", "boundaries"]
+    },
+    "other": {
+      "prompt": "Describe this diagram by identifying:\n1. The apparent type or purpose of the diagram\n2. All labeled elements or components\n3. All connections, arrows, or relationships\n4. Any legends, keys, or notation guides\n5. Text labels and annotations\n6. Colors or shapes used to distinguish elements\n7. The overall layout and organization\nProvide a complete factual description of what is shown.",
+      "focus_areas": ["elements", "relationships", "labels", "notation", "organization"]
+    }
+  }
+}

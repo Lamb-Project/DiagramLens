@@ -1,0 +1,15 @@
+{
+  "categories": [
+    "entity relationship diagram",
+    "class diagram",
+    "sequence diagram",
+    "data flow diagram",
+    "schema",
+    "architecture diagram",
+    "use‑case diagram",
+    "state diagram",
+    "deployment diagram",
+    "C4 Model diagram",
+    "other"
+  ]
+}
