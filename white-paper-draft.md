@@ -1,9 +1,3 @@
-Perfect — that’s a thorough README and it gives us all the detail needed to make the “methods” section of your paper technically sound and verifiable.
-
-Here’s how we can integrate that into a polished and cohesive **technical paper draft** that accurately reflects both **DeepSeekOCR-MLX** and **DiagramLens** in your processing pipeline.
-
----
-
 ## Title
 
 **A Local Multimodal Pipeline for Technical Report Analysis Using Vision-Language Models**
