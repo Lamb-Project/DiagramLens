@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Diagram Annotator Batch Processing Script
 # Processes all markdown files in an input directory and outputs results to an output directory
@@ -151,9 +151,8 @@ process_file() {
 # Function to find all markdown files
 find_markdown_files() {
     local input_dir=$1
-    
-    # Only search in the top level directory
-    find "$input_dir" -maxdepth 1 -type f -name "*.md" 2>/dev/null
+    # Only search in the top level directory, output NUL-delimited results to handle spaces/newlines
+    find "$input_dir" -maxdepth 1 -type f -name "*.md" -print0 2>/dev/null
 }
 
 # Parse command line arguments
@@ -250,7 +249,11 @@ fi
 
 # Find all markdown files
 print_message "$BOLD" "Scanning for markdown files..."
-mapfile -t md_files < <(find_markdown_files "$INPUT_DIR")
+md_files=()
+# Read NUL-delimited paths into array (portable to Bash 3.x)
+while IFS= read -r -d "" f; do
+    md_files+=("$f")
+done < <(find_markdown_files "$INPUT_DIR")
 
 if [ ${#md_files[@]} -eq 0 ]; then
     print_message "$YELLOW" "⚠ No markdown files found in $INPUT_DIR"
