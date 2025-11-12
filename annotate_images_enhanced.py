@@ -80,7 +80,7 @@ def call_ollama(
     }
 
     try:
-        resp = requests.post(OLLAMA_URL, json=payload, timeout=120)
+        resp = requests.post(OLLAMA_URL, json=payload, timeout=180)
         resp.raise_for_status()
         data = resp.json()
         return data.get("message", {}).get("content", "").strip()
