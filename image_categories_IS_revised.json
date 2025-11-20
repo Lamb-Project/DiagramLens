@@ -1,0 +1,897 @@
+{
+  "categories": [
+    "entity relationship diagram",
+    "class diagram",
+    "sequence diagram",
+    "data flow diagram",
+    "flowchart",
+    "schema",
+    "architecture diagram",
+    "use case diagram",
+    "state diagram",
+    "deployment diagram",
+    "c4 model diagram",
+    "activity diagram",
+    "component diagram",
+    "communication diagram",
+    "package diagram",
+    "object diagram",
+    "composite structure diagram",
+    "timing diagram",
+    "bpmn diagram",
+    "network diagram",
+    "git workflow",
+    "ui mockup",
+    "wireframe",
+    "mind map",
+    "gantt chart",
+    "api specification",
+    "infrastructure diagram",
+    "cloud architecture",
+    "microservices diagram",
+    "system context diagram",
+    "data model diagram",
+    "decision tree",
+    "fault tree",
+    "block diagram",
+    "other"
+  ],
+  "validation_checks": {
+    "multiple_diagram_detection": "Always check if image contains multiple diagrams. Look for: separate titles, dividing lines, distinct areas, different diagram types in same image",
+    "notation_verification": "Report notation errors explicitly: missing <<extend>>, wrong arrow types, missing multiplicities, incorrect stereotypes",
+    "quality_assessment": "If image quality prevents accurate reading, state: 'Image quality limitation' rather than guessing",
+    "domain_model_specific": "For domain models: NO methods, NO visibility markers, NO interfaces. If these appear, note as errors",
+    "relationship_precision": "For relationships: only report what is explicitly visible. Don't assume stereotypes if text is not present"
+  },
+  "category_prompts": {
+    "entity relationship diagram": {
+      "prompt": "IMPORTANT: First check if this is actually an ER diagram or a UML class diagram (domain model).\n\nIf it's an ER Diagram, list:\n1. All entities present (list each entity name)\n2. The attributes for each entity that are visible\n3. Primary keys (marked with PK or underlined)\n4. Foreign keys if marked\n5. All relationships between entities with their cardinality (1:1, 1:N, M:N)\n6. Any relationship attributes if present\n7. Whether the notation appears to be Chen, Crow's Foot, or another standard\n8. Any constraints or business rules shown\n\nIf this appears to be a UML class diagram instead, state: 'This appears to be a UML class diagram, not an ER diagram' and describe it as a class diagram.\nIf any elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "entities",
+        "attributes",
+        "keys",
+        "relationships",
+        "cardinality",
+        "notation",
+        "diagram_type_verification"
+      ],
+      "keywords": [
+        "entity",
+        "relationship",
+        "ERD",
+        "cardinality",
+        "primary key",
+        "foreign key",
+        "database model"
+      ]
+    },
+    "class diagram": {
+      "prompt": "FIRST: Identify the type of class diagram:\n- Domain Model (modelo de dominio): conceptual classes without methods, only attributes\n- Design Class Diagram: classes with methods, visibility markers, and full UML notation\n- Analysis Class Diagram: uses boundary/control/entity stereotypes\n\nFor DOMAIN MODELS, list:\n1. All classes (rectangles) - exact names as shown\n2. Attributes for each class (NO methods should appear)\n3. Associations with multiplicities:\n   - Report EXACTLY as shown at BOTH ends (1, 0..1, *, 0..*, 1..*, etc.)\n   - If multiplicity appears to be '1', verify carefully (not 0..*)\n   - Note if any multiplicity is missing\n4. Association names and reading direction arrows if shown\n5. Aggregation (hollow diamond) and composition (filled diamond)\n6. Generalization/inheritance (hollow triangle arrowhead)\n\nDO NOT report for domain models:\n- Methods or operations\n- Interfaces (<<interface>>)\n- Abstract classes\n- Visibility markers (+, -, #)\n\nFor DESIGN CLASS DIAGRAMS:\nInclude all standard UML notation including methods, visibility, interfaces, etc.\n\nFor ANALYSIS CLASS DIAGRAMS:\nIdentify boundary, control, and entity stereotypes.\n\nIf multiplicities are unclear due to image quality, state: 'Multiplicity unclear' rather than guessing.\nIf this is misidentified as another diagram type, correct it.",
+      "focus_areas": [
+        "diagram_subtype",
+        "classes",
+        "attributes_only_for_domain",
+        "exact_multiplicities",
+        "associations",
+        "no_methods_in_domain_models"
+      ],
+      "keywords": [
+        "class",
+        "modelo de dominio",
+        "domain model",
+        "UML",
+        "attribute",
+        "association",
+        "multiplicity",
+        "inheritance"
+      ]
+    },
+    "sequence diagram": {
+      "prompt": "CRITICAL: First determine if this image contains ONE or MULTIPLE sequence diagrams.\n\nIdentification checks:\n- Look for separate titles or use case names\n- Check for visual separators (lines, spacing, boxes)\n- Different participant sets indicate different diagrams\n- Each use case typically has its own sequence diagram\n\nFor EACH separate sequence diagram found:\n1. Diagram identifier (title, use case name, or 'Diagram 1/2/3' if unlabeled)\n2. Boundary indicators (what separates this from other diagrams)\n3. Participants/objects for THIS diagram only (list left to right)\n4. Lifelines specific to this diagram\n5. Messages in chronological order for THIS diagram:\n   - Format: 'Sender -> Receiver: message_name'\n   - Number each message (1, 2, 3...)\n6. Message types (solid line = sync, dashed = return)\n7. Activation boxes (execution occurrences)\n8. Combined fragments (loop, alt, opt) with conditions\n9. Any creation/destruction of objects\n\nWARNINGS:\n- Do NOT merge different use case scenarios into one description\n- Do NOT split a single diagram with multiple interactions\n- If unsure about separation, describe potential interpretations\n\nIf image quality is poor, note: 'Low image quality affects accurate reading of [specify elements]'\nIf any elements are not visible, omit them rather than guessing.",
+      "focus_areas": [
+        "diagram_count",
+        "use_case_identification",
+        "participants_per_diagram",
+        "message_sequence",
+        "no_diagram_merging",
+        "no_false_splitting"
+      ],
+      "keywords": [
+        "sequence",
+        "lifeline",
+        "message",
+        "actor",
+        "activation",
+        "synchronous",
+        "use case scenario"
+      ]
+    },
+    "use case diagram": {
+      "prompt": "IMPORTANT: Check if there are multiple use case diagrams in this image. If so, describe EACH separately.\n\nFor each Use Case Diagram found:\n1. Diagram identifier (title, figure number, or position if multiple)\n2. All actors (stick figures or boxes outside system) - exact names\n3. System boundary (large rectangle containing use cases) - NOT packages\n   - Note the system name if labeled\n4. All use cases (ovals/ellipses) - exact text inside each\n5. Actor-use case associations (simple lines):\n   - List as 'Actor -> Use Case'\n6. Include relationships:\n   - ONLY report if <<include>> text is visible\n   - Format: 'UC1 <<include>> UC2'\n7. Extend relationships:\n   - ONLY report if <<extend>> text is visible\n   - Format: 'UC1 <<extend>> UC2'\n8. Generalization between actors:\n   - Look for hollow triangle arrowhead\n   - Format: 'ChildActor --|> ParentActor'\n9. Packages (tabbed rectangles grouping elements) if present\n   - These are NOT system boundaries\n10. Notation errors to check:\n    - Missing <<include>> or <<extend>> stereotypes\n    - Wrong arrow directions\n    - Incorrect generalization notation\n    - Actors inside system boundary\n\nBe precise:\n- Only report relationships where stereotype text is EXPLICITLY visible\n- Don't assume stereotypes from arrow style alone\n- If multiple diagrams exist, use clear headers like 'DIAGRAM 1:' and 'DIAGRAM 2:'\n\nIf notation appears incorrect, note it explicitly.",
+      "focus_areas": [
+        "actors",
+        "use_cases",
+        "system_boundary_vs_packages", 
+        "explicit_stereotypes",
+        "generalization",
+        "notation_errors",
+        "multiple_diagrams"
+      ],
+      "keywords": [
+        "use case",
+        "actor",
+        "system boundary",
+        "include",
+        "extend",
+        "package",
+        "generalization"
+      ]
+    },
+    "architecture diagram": {
+      "prompt": "CRITICAL: First identify the architectural level and type. Do NOT confuse with use case or class diagrams.\n\nTypes to distinguish:\n\nA. ANALYSIS ARCHITECTURE (with analysis classes):\n1. Boundary classes (rectangle with half-circle on left)\n2. Control classes (rectangle with circle arrow on top)\n3. Entity classes (rectangle with underline or marked as entity)\n4. Dependencies between analysis classes (dashed arrows)\n5. Packages grouping related analysis classes\n6. Layer organization (presentation/control/model)\n\nB. DEPLOYMENT/SYSTEM ARCHITECTURE:\n1. Hardware nodes (3D boxes, servers, devices)\n2. Software components or applications deployed\n3. Communication protocols (HTTP, TCP/IP, etc.)\n4. Databases and storage systems\n5. Network connections\n6. System boundaries and zones\n\nC. COMPONENT ARCHITECTURE:\n1. Components with <<component>> stereotype\n2. Provided interfaces (lollipop/circle)\n3. Required interfaces (socket/half-circle)\n4. Subsystems and packages\n5. Dependencies and connectors\n\nD. LAYERED ARCHITECTURE:\n1. Horizontal layers (Presentation, Business, Data)\n2. Vertical layers or modules\n3. Dependencies between layers\n\nIdentify which type(s) are present and describe accordingly.\nIf the diagram seems incorrectly drawn or uses non-standard notation, note this.\nDo NOT describe as use case diagram if it shows technical components.\nDo NOT describe as class diagram if it shows deployment or components.",
+      "focus_areas": [
+        "architecture_type",
+        "analysis_class_stereotypes",
+        "deployment_elements",
+        "component_interfaces",
+        "correct_identification",
+        "notation_validation"
+      ],
+      "keywords": [
+        "architecture",
+        "análisis arquitectónico",
+        "analysis classes",
+        "boundary control entity",
+        "BCE",
+        "deployment",
+        "component",
+        "layer"
+      ]
+    },
+    "data flow diagram": {
+      "prompt": "Describe this Data Flow Diagram by listing:\n1. All external entities (squares/rectangles on edges)\n2. All processes (circles/rounded rectangles with numbers like 1.0, 2.0)\n3. All data stores (parallel lines with names)\n4. All data flows (arrows) with their labels\n5. The DFD level (Context/Level 0/Level 1)\n6. Process numbering scheme used\n7. Whether it follows Gane-Sarson or Yourdon-DeMarco notation\n8. Any missing flow labels or unnamed elements\nBe specific about what connects to what.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "external_entities",
+        "processes",
+        "data_stores",
+        "data_flows",
+        "levels"
+      ],
+      "keywords": [
+        "DFD",
+        "data flow",
+        "process",
+        "data store",
+        "external entity",
+        "context diagram"
+      ]
+    },
+    "flowchart": {
+      "prompt": "Describe this Flowchart by listing:\n1. All start/end points (ovals)\n2. All process boxes (rectangles) with their labels\n3. All decision points (diamonds) with their conditions\n4. Input/output operations (parallelograms)\n5. The flow direction (arrows) and any labels on branches\n6. Any subroutines or predefined processes\n7. Swim lanes if present\n8. The overall logic flow from start to finish\nTrace through the main path and alternative paths.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "start_end",
+        "processes",
+        "decisions",
+        "flow_direction",
+        "logic"
+      ],
+      "keywords": [
+        "flowchart",
+        "decision",
+        "process",
+        "flow",
+        "start",
+        "end",
+        "condition",
+        "branch"
+      ]
+    },
+    "schema": {
+      "prompt": "Describe this Database Schema by listing:\n1. All tables/entities shown\n2. For each table: all columns with their data types (VARCHAR, INT, etc.)\n3. Primary keys (usually marked with PK or key symbol)\n4. Foreign keys and what they reference\n5. Any indexes shown\n6. Constraints (NOT NULL, UNIQUE, CHECK) if visible\n7. Relationships between tables (lines showing foreign key references)\n8. Whether it appears to be relational, document-based, or another type\nBe specific about data types and constraints.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "tables",
+        "columns",
+        "data_types",
+        "keys",
+        "constraints",
+        "relationships"
+      ],
+      "keywords": [
+        "schema",
+        "table",
+        "column",
+        "database",
+        "SQL",
+        "primary key",
+        "foreign key",
+        "index"
+      ]
+    },
+    "state diagram": {
+      "prompt": "Describe this State Diagram by listing:\n1. All states (rounded rectangles with names)\n2. The initial state (filled circle) and what it transitions to\n3. Final states (circle with dot inside) if any\n4. All transitions with their labels (event[guard]/action format)\n5. Events that trigger transitions\n6. Guard conditions in square brackets\n7. Actions shown after forward slash\n8. Any composite or hierarchical states\n9. Entry/exit actions within states\nList states and transitions systematically.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "states",
+        "transitions",
+        "events",
+        "guards",
+        "actions",
+        "initial_final"
+      ],
+      "keywords": [
+        "state",
+        "transition",
+        "state machine",
+        "event",
+        "guard",
+        "action",
+        "FSM"
+      ]
+    },
+    "deployment diagram": {
+      "prompt": "Describe this Deployment Diagram by listing:\n1. All nodes (3D boxes representing hardware/environments)\n2. Node types (server, device, execution environment)\n3. Artifacts deployed on each node (components, files, executables)\n4. Communication paths between nodes (lines with protocols)\n5. Multiplicities on nodes if shown\n6. Any deployment specifications\n7. Technologies or platforms labeled (OS, middleware)\n8. Network topology if apparent\nSpecify what is deployed where.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "nodes",
+        "artifacts",
+        "communications",
+        "deployment_specs",
+        "technologies"
+      ],
+      "keywords": [
+        "deployment",
+        "node",
+        "artifact",
+        "server",
+        "infrastructure",
+        "network"
+      ]
+    },
+    "c4 model diagram": {
+      "prompt": "Describe this C4 Model diagram by identifying:\n1. The C4 level (Context/Container/Component/Code)\n2. For Context: all systems, users/actors, and external systems\n3. For Container: all containers with their technology labels in brackets\n4. For Component: all components within their container\n5. All relationships with their labels and protocols\n6. Technologies in brackets (e.g., [Java], [PostgreSQL], [REST API])\n7. The system boundary (dashed line)\n8. Any numbered interactions showing flow\n9. Person/Software System/Container/Component shapes used\nSpecify exactly what C4 level and what elements are present.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "c4_level",
+        "elements",
+        "technologies",
+        "relationships",
+        "boundaries"
+      ],
+      "keywords": [
+        "C4",
+        "context",
+        "container",
+        "component",
+        "system boundary",
+        "software system",
+        "C4 model"
+      ]
+    },
+    "activity diagram": {
+      "prompt": "Describe this Activity Diagram by listing:\n1. Initial node (filled circle) and final nodes\n2. All activities (rounded rectangles)\n3. Decision nodes (diamonds) with guard conditions\n4. Fork/Join bars for parallel activities\n5. Swim lanes or partitions if present\n6. Object flows if shown\n7. Signal send/receive events\n8. The overall workflow from start to finish\nTrace through the main flow and alternative paths.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "activities",
+        "decisions",
+        "parallel_flows",
+        "swim_lanes",
+        "workflow"
+      ],
+      "keywords": [
+        "activity",
+        "workflow",
+        "decision",
+        "fork",
+        "join",
+        "parallel",
+        "swim lane"
+      ]
+    },
+    "component diagram": {
+      "prompt": "Describe this Component Diagram by listing:\n1. All components (rectangles with component icon)\n2. Provided interfaces (lollipop notation)\n3. Required interfaces (socket notation)\n4. Dependencies between components\n5. Ports if shown\n6. Packages or subsystems containing components\n7. Any stereotypes or constraints\n8. Communication protocols if labeled\nShow how components connect and depend on each other.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "components",
+        "interfaces",
+        "dependencies",
+        "ports",
+        "packages"
+      ],
+      "keywords": [
+        "component",
+        "interface",
+        "dependency",
+        "provided",
+        "required",
+        "port"
+      ]
+    },
+    "communication diagram": {
+      "prompt": "Describe this Communication/Collaboration Diagram by listing:\n1. All objects/instances shown\n2. Links between objects\n3. Messages with sequence numbers\n4. Message direction (arrows)\n5. Any conditional messages\n6. Iteration markers if present\n7. The overall interaction pattern\nList messages in sequence number order.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "objects",
+        "links",
+        "messages",
+        "sequence_numbers",
+        "interactions"
+      ],
+      "keywords": [
+        "communication",
+        "collaboration",
+        "message",
+        "link",
+        "interaction",
+        "sequence number"
+      ]
+    },
+    "package diagram": {
+      "prompt": "Describe this Package Diagram by listing:\n1. All packages shown (folders or rectangles with tabs)\n2. Package names and stereotypes\n3. Elements within each package (classes, interfaces, etc.)\n4. Dependencies between packages (dashed arrows)\n5. Import and access relationships\n6. Package visibility (public/private)\n7. Nested packages if present\n8. Any merge relationships\nShow the package structure and dependencies.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "packages",
+        "dependencies",
+        "imports",
+        "visibility",
+        "nesting"
+      ],
+      "keywords": [
+        "package",
+        "namespace",
+        "import",
+        "dependency",
+        "module"
+      ]
+    },
+    "object diagram": {
+      "prompt": "Describe this Object Diagram by listing:\n1. All object instances (underlined names)\n2. Object names and their class types\n3. Attribute values for each object\n4. Links between objects\n5. Link names and multiplicities\n6. Any association roles\n7. The snapshot of the system state shown\nThis represents a specific instance of the system.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "objects",
+        "attributes",
+        "values",
+        "links",
+        "snapshot"
+      ],
+      "keywords": [
+        "object",
+        "instance",
+        "snapshot",
+        "link",
+        "attribute value"
+      ]
+    },
+    "composite structure diagram": {
+      "prompt": "Describe this Composite Structure Diagram by listing:\n1. The main composite class or component\n2. All parts within the composite\n3. Ports on the boundary\n4. Connectors between parts\n5. Required and provided interfaces\n6. Multiplicities of parts\n7. Collaboration uses if shown\n8. Properties and their types\nShow the internal structure of the composite.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "composite",
+        "parts",
+        "ports",
+        "connectors",
+        "internal_structure"
+      ],
+      "keywords": [
+        "composite",
+        "part",
+        "port",
+        "connector",
+        "internal structure"
+      ]
+    },
+    "timing diagram": {
+      "prompt": "Describe this Timing Diagram by listing:\n1. All lifelines (objects/components)\n2. States or conditions for each lifeline\n3. Time axis (horizontal) with units if shown\n4. State transitions and their timing\n5. Duration constraints\n6. Time constraints between events\n7. Messages between lifelines\n8. Any timing rulers or marks\nShow how states change over time.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "lifelines",
+        "states",
+        "timing",
+        "transitions",
+        "constraints"
+      ],
+      "keywords": [
+        "timing",
+        "timeline",
+        "duration",
+        "constraint",
+        "temporal"
+      ]
+    },
+    "bpmn diagram": {
+      "prompt": "Describe this BPMN (Business Process Model and Notation) Diagram by listing:\n1. All pools and lanes (participants)\n2. Start events (circles) and end events\n3. Tasks/activities (rectangles)\n4. Gateways (diamonds) - exclusive, parallel, inclusive\n5. Intermediate events (double circles)\n6. Sequence flows (solid arrows)\n7. Message flows (dashed arrows)\n8. Data objects and stores\n9. Any annotations\nTrace through the business process flow.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "pools_lanes",
+        "events",
+        "tasks",
+        "gateways",
+        "flows",
+        "process"
+      ],
+      "keywords": [
+        "BPMN",
+        "process",
+        "pool",
+        "lane",
+        "gateway",
+        "task",
+        "event",
+        "workflow"
+      ]
+    },
+    "network diagram": {
+      "prompt": "Describe this Network Diagram by listing:\n1. All network devices (routers, switches, servers, etc.)\n2. Network segments or VLANs\n3. Connection types (Ethernet, WiFi, fiber, etc.)\n4. IP addresses or network ranges if shown\n5. Firewalls and security devices\n6. Internet/WAN connections\n7. Network protocols labeled\n8. Any DMZ or security zones\n9. Redundancy or failover paths\nShow the network topology and connectivity.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "devices",
+        "connections",
+        "segments",
+        "security",
+        "topology"
+      ],
+      "keywords": [
+        "network",
+        "router",
+        "switch",
+        "firewall",
+        "VLAN",
+        "topology",
+        "subnet"
+      ]
+    },
+    "git workflow": {
+      "prompt": "Describe this Git Workflow Diagram by listing:\n1. All branches shown (main, develop, feature, etc.)\n2. Commits (dots or circles) along branches\n3. Merge points and merge directions\n4. Branch creation points\n5. Tags or releases if marked\n6. Any pull/merge requests indicated\n7. The branching strategy (GitFlow, GitHub Flow, etc.)\n8. Time flow direction\nExplain the version control workflow shown.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "branches",
+        "commits",
+        "merges",
+        "workflow_strategy",
+        "releases"
+      ],
+      "keywords": [
+        "git",
+        "branch",
+        "merge",
+        "commit",
+        "pull request",
+        "repository",
+        "version control"
+      ]
+    },
+    "ui mockup": {
+      "prompt": "Describe this UI Mockup by listing:\n1. Screen/page layout and structure\n2. Major UI components (headers, navigation, content areas)\n3. Form elements (buttons, inputs, dropdowns)\n4. Navigation elements (menus, tabs, breadcrumbs)\n5. Content sections and their purpose\n6. Any interactive elements indicated\n7. Mobile/responsive considerations if shown\n8. Visual hierarchy and information architecture\nDescribe the user interface design shown.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "layout",
+        "components",
+        "navigation",
+        "forms",
+        "content_areas"
+      ],
+      "keywords": [
+        "UI",
+        "mockup",
+        "interface",
+        "screen",
+        "button",
+        "form",
+        "navigation",
+        "layout"
+      ]
+    },
+    "wireframe": {
+      "prompt": "Describe this Wireframe by listing:\n1. Page structure and layout grid\n2. Content blocks and their labels\n3. Navigation structure\n4. Placeholder elements (images, text, etc.)\n5. Interactive elements (buttons, links)\n6. Annotations or notes\n7. Screen flow indicators if present\n8. Responsive breakpoints if shown\nThis is a low-fidelity structural design.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "structure",
+        "layout",
+        "content_blocks",
+        "navigation",
+        "annotations"
+      ],
+      "keywords": [
+        "wireframe",
+        "layout",
+        "prototype",
+        "placeholder",
+        "structure",
+        "low-fidelity"
+      ]
+    },
+    "mind map": {
+      "prompt": "Describe this Mind Map by listing:\n1. Central concept or topic\n2. Main branches (first-level topics)\n3. Sub-branches and their hierarchy\n4. Keywords or phrases on each branch\n5. Any icons or visual markers\n6. Color coding if used meaningfully\n7. Connections between non-adjacent branches\n8. The overall knowledge structure\nTrace from center outward through all branches.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "central_topic",
+        "branches",
+        "hierarchy",
+        "connections",
+        "concepts"
+      ],
+      "keywords": [
+        "mind map",
+        "concept",
+        "branch",
+        "hierarchy",
+        "brainstorm",
+        "idea"
+      ]
+    },
+    "gantt chart": {
+      "prompt": "Describe this Gantt Chart by listing:\n1. Project timeline (start and end dates)\n2. All tasks or activities listed\n3. Task durations (bar lengths)\n4. Task dependencies (arrows between bars)\n5. Milestones (diamonds or markers)\n6. Resource assignments if shown\n7. Progress indicators (% complete)\n8. Critical path if highlighted\n9. Any phases or task groupings\nShow the project schedule and dependencies.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "timeline",
+        "tasks",
+        "durations",
+        "dependencies",
+        "milestones"
+      ],
+      "keywords": [
+        "Gantt",
+        "timeline",
+        "schedule",
+        "task",
+        "milestone",
+        "dependency",
+        "project"
+      ]
+    },
+    "api specification": {
+      "prompt": "Describe this API Specification/Documentation by listing:\n1. API endpoints shown (paths and methods)\n2. Request parameters and types\n3. Request/response bodies and schemas\n4. HTTP methods (GET, POST, PUT, DELETE)\n5. Status codes mentioned\n6. Authentication methods if shown\n7. Data formats (JSON, XML, etc.)\n8. Any versioning information\n9. Rate limits or constraints\nDescribe the API interface contract.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "endpoints",
+        "methods",
+        "parameters",
+        "schemas",
+        "authentication"
+      ],
+      "keywords": [
+        "API",
+        "endpoint",
+        "REST",
+        "HTTP",
+        "request",
+        "response",
+        "swagger",
+        "OpenAPI"
+      ]
+    },
+    "infrastructure diagram": {
+      "prompt": "Describe this Infrastructure Diagram by listing:\n1. Physical or virtual servers\n2. Storage systems (SAN, NAS, object storage)\n3. Network infrastructure (switches, routers, load balancers)\n4. Security appliances (firewalls, IDS/IPS)\n5. Backup and disaster recovery components\n6. Monitoring and management systems\n7. Data center or rack layouts if shown\n8. Connectivity and bandwidth indicators\n9. Redundancy and failover configurations\nShow the infrastructure topology and components.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "servers",
+        "storage",
+        "networking",
+        "security",
+        "redundancy"
+      ],
+      "keywords": [
+        "infrastructure",
+        "server",
+        "storage",
+        "data center",
+        "hardware",
+        "virtualization"
+      ]
+    },
+    "cloud architecture": {
+      "prompt": "Describe this Cloud Architecture Diagram by listing:\n1. Cloud provider and services used (AWS, Azure, GCP)\n2. Regions and availability zones\n3. Compute resources (VMs, containers, serverless)\n4. Storage services (object, block, database)\n5. Networking (VPC, subnets, gateways)\n6. Security groups and IAM roles\n7. Managed services (RDS, Lambda, etc.)\n8. CDN and edge locations\n9. Monitoring and logging services\nShow the cloud infrastructure design.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "cloud_services",
+        "regions",
+        "compute",
+        "storage",
+        "networking"
+      ],
+      "keywords": [
+        "cloud",
+        "AWS",
+        "Azure",
+        "GCP",
+        "VPC",
+        "lambda",
+        "container",
+        "Kubernetes"
+      ]
+    },
+    "microservices diagram": {
+      "prompt": "Describe this Microservices Architecture Diagram by listing:\n1. All microservices shown (with names)\n2. API Gateway or entry points\n3. Service communication patterns (REST, gRPC, messaging)\n4. Databases per service\n5. Message queues or event buses\n6. Service discovery/registry\n7. Load balancers\n8. Container orchestration (Kubernetes, etc.)\n9. Monitoring and tracing components\nShow how services interact and communicate.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "services",
+        "communication",
+        "databases",
+        "messaging",
+        "orchestration"
+      ],
+      "keywords": [
+        "microservice",
+        "API gateway",
+        "service mesh",
+        "container",
+        "REST",
+        "event",
+        "message queue"
+      ]
+    },
+    "system context diagram": {
+      "prompt": "Describe this System Context Diagram by listing:\n1. The system under consideration (central element)\n2. All external users/actors\n3. External systems that interact\n4. Data flows in and out of the system\n5. System boundaries clearly marked\n6. Types of interactions (real-time, batch, etc.)\n7. Protocols or interfaces used\n8. Any constraints or SLAs mentioned\nShow the system's place in its environment.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "system",
+        "external_actors",
+        "external_systems",
+        "interactions",
+        "boundaries"
+      ],
+      "keywords": [
+        "context",
+        "system boundary",
+        "external",
+        "actor",
+        "interaction",
+        "interface"
+      ]
+    },
+    "data model diagram": {
+      "prompt": "Describe this Data Model Diagram by listing:\n1. Conceptual, logical, or physical level\n2. All entities or data objects\n3. Attributes and their types\n4. Relationships and cardinalities\n5. Any hierarchies or inheritance\n6. Constraints and business rules\n7. Dimensional modeling aspects (facts, dimensions)\n8. Any denormalization shown\nDescribe the data structure and relationships.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "entities",
+        "attributes",
+        "relationships",
+        "constraints",
+        "modeling_level"
+      ],
+      "keywords": [
+        "data model",
+        "entity",
+        "attribute",
+        "dimension",
+        "fact",
+        "star schema",
+        "normalization"
+      ]
+    },
+    "decision tree": {
+      "prompt": "Describe this Decision Tree by listing:\n1. Root decision or question\n2. All decision nodes (questions/conditions)\n3. Branches with their conditions/values\n4. Leaf nodes (outcomes/classifications)\n5. Path from root to each outcome\n6. Any probabilities or weights shown\n7. Splitting criteria if mentioned\n8. The decision logic flow\nTrace through all decision paths.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "root",
+        "decisions",
+        "branches",
+        "outcomes",
+        "logic"
+      ],
+      "keywords": [
+        "decision tree",
+        "decision",
+        "branch",
+        "leaf",
+        "outcome",
+        "classification"
+      ]
+    },
+    "fault tree": {
+      "prompt": "Describe this Fault Tree Analysis Diagram by listing:\n1. Top event (undesired outcome)\n2. All intermediate events\n3. Basic events (leaf nodes)\n4. Logic gates (AND, OR, etc.)\n5. Event descriptions and labels\n6. Probabilities if shown\n7. Transfer symbols if used\n8. The failure logic structure\nTrace how basic events lead to the top event.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "top_event",
+        "gates",
+        "basic_events",
+        "failure_logic",
+        "probabilities"
+      ],
+      "keywords": [
+        "fault tree",
+        "FTA",
+        "failure",
+        "gate",
+        "event",
+        "reliability",
+        "safety"
+      ]
+    },
+    "block diagram": {
+      "prompt": "Describe this Block Diagram by listing:\n1. All functional blocks/modules\n2. Input and output signals\n3. Signal flow directions (arrows)\n4. Block functions or operations\n5. Feedback loops if present\n6. Any mathematical operations shown\n7. System boundaries\n8. The overall system architecture\nTrace signal flow through the system.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "blocks",
+        "signals",
+        "flow",
+        "functions",
+        "feedback"
+      ],
+      "keywords": [
+        "block diagram",
+        "signal",
+        "module",
+        "function",
+        "input",
+        "output",
+        "feedback"
+      ]
+    },
+    "other": {
+      "prompt": "Describe this diagram by identifying:\n1. The apparent type or purpose of the diagram\n2. All labeled elements or components\n3. All connections, arrows, or relationships\n4. Any legends, keys, or notation guides\n5. Text labels and annotations\n6. Colors or shapes used to distinguish elements\n7. The overall layout and organization\n8. Domain-specific notations or symbols\n9. Any metrics or measurements shown\nProvide a complete factual description of what is shown.\nIf any of these elements are not visible in the diagram, omit them from your answer.",
+      "focus_areas": [
+        "elements",
+        "relationships",
+        "labels",
+        "notation",
+        "organization"
+      ],
+      "keywords": []
+    }
+  },
+  "context_indicators": {
+    "entity relationship diagram": [
+      "entity",
+      "relationship",
+      "ERD",
+      "database design",
+      "data model",
+      "cardinality",
+      "foreign key",
+      "primary key"
+    ],
+    "class diagram": [
+      "class",
+      "inheritance",
+      "UML",
+      "object-oriented",
+      "method",
+      "attribute",
+      "interface",
+      "extends",
+      "implements",
+      "modelo de dominio",
+      "domain model",
+      "conceptual model"
+    ],
+    "sequence diagram": [
+      "sequence",
+      "interaction",
+      "message",
+      "lifeline",
+      "actor",
+      "timeline",
+      "call",
+      "return",
+      "use case scenario"
+    ],
+    "c4 model diagram": [
+      "C4",
+      "context diagram",
+      "container diagram",
+      "component diagram",
+      "system context",
+      "C4 model",
+      "software architecture"
+    ],
+    "use case diagram": [
+      "use case",
+      "actor",
+      "scenario",
+      "system boundary",
+      "include",
+      "extend",
+      "user story",
+      "caso de uso"
+    ],
+    "architecture diagram": [
+      "architecture",
+      "system design",
+      "components",
+      "layers",
+      "tiers",
+      "services",
+      "integration",
+      "análisis arquitectónico",
+      "analysis classes",
+      "boundary control entity",
+      "BCE"
+    ],
+    "data flow diagram": [
+      "data flow",
+      "DFD",
+      "process",
+      "data store",
+      "external entity",
+      "context diagram"
+    ],
+    "flowchart": [
+      "flowchart",
+      "process flow",
+      "decision",
+      "algorithm",
+      "workflow",
+      "logic"
+    ],
+    "bpmn diagram": [
+      "BPMN",
+      "business process",
+      "workflow",
+      "swim lane",
+      "pool",
+      "gateway",
+      "task"
+    ],
+    "network diagram": [
+      "network",
+      "topology",
+      "router",
+      "switch",
+      "firewall",
+      "subnet",
+      "VLAN",
+      "infrastructure"
+    ],
+    "git workflow": [
+      "git",
+      "branch",
+      "merge",
+      "commit",
+      "version control",
+      "repository",
+      "pull request"
+    ],
+    "deployment diagram": [
+      "deployment",
+      "node",
+      "artifact",
+      "infrastructure",
+      "server",
+      "environment"
+    ],
+    "state diagram": [
+      "state",
+      "state machine",
+      "transition",
+      "FSM",
+      "finite state",
+      "event",
+      "condition"
+    ],
+    "gantt chart": [
+      "Gantt",
+      "timeline",
+      "schedule",
+      "project",
+      "milestone",
+      "task",
+      "duration"
+    ],
+    "ui mockup": [
+      "UI",
+      "user interface",
+      "mockup",
+      "design",
+      "screen",
+      "prototype",
+      "wireframe"
+    ],
+    "api specification": [
+      "API",
+      "REST",
+      "endpoint",
+      "HTTP",
+      "request",
+      "response",
+      "swagger",
+      "OpenAPI"
+    ],
+    "cloud architecture": [
+      "cloud",
+      "AWS",
+      "Azure",
+      "GCP",
+      "serverless",
+      "container",
+      "Kubernetes",
+      "microservices"
+    ],
+    "microservices diagram": [
+      "microservice",
+      "service",
+      "API gateway",
+      "container",
+      "Docker",
+      "Kubernetes",
+      "service mesh"
+    ],
+    "domain model indicators": [
+      "modelo de dominio",
+      "domain model",
+      "conceptual model",
+      "information model",
+      "classes without methods"
+    ],
+    "analysis architecture indicators": [
+      "analysis classes",
+      "boundary control entity",
+      "BCE pattern",
+      "análisis arquitectónico",
+      "clases de análisis"
+    ]
+  }
+}
